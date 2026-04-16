@@ -1,0 +1,408 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{metropolis}
+
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\usepackage{fontawesome5}
+
+% ─────────────────────────────────────────────────────────────
+%  PALETA
+% ─────────────────────────────────────────────────────────────
+\definecolor{mainColor}{HTML}{00a499}
+\definecolor{accentColor}{HTML}{EA7600}
+\definecolor{bgLight}{HTML}{E6F7F6}
+\definecolor{codeGray}{HTML}{2B2B2B}
+
+% ─────────────────────────────────────────────────────────────
+%  METROPOLIS
+% ─────────────────────────────────────────────────────────────
+\setbeamercolor{normal text}{fg=codeGray, bg=white}
+\setbeamercolor{frametitle}{bg=mainColor, fg=white}
+\setbeamercolor{alerted text}{fg=accentColor}
+\setbeamercolor{progress bar}{fg=accentColor, bg=mainColor!25}
+\setbeamercolor{block title}{bg=mainColor, fg=white}
+\setbeamercolor{block body}{bg=bgLight, fg=codeGray}
+\setbeamercolor{block title alerted}{bg=accentColor, fg=white}
+\setbeamercolor{block body alerted}{bg=accentColor!10, fg=codeGray}
+\metroset{progressbar=frametitle, sectionpage=none, numbering=fraction}
+
+% ─────────────────────────────────────────────────────────────
+%  IMAGEN CON FALLBACK AUTOMÁTICO
+%  Uso: \img{image1.jpg}{Descripción}
+%  → Si el archivo existe: muestra la imagen
+%  → Si no existe:         muestra placeholder con el nombre del archivo
+%  Para reemplazar: pon el archivo .jpg/.png junto al .tex
+% ─────────────────────────────────────────────────────────────
+\newcommand{\img}[3][0.95\linewidth]{%
+  \begin{center}
+  \IfFileExists{#2}{%
+    \includegraphics[width=#1, keepaspectratio]{#2}%
+  }{%
+    \begin{tikzpicture}
+      \node[draw=mainColor!60, fill=bgLight, rounded corners=4pt,
+            minimum width=#1, minimum height=2.0cm, align=center,
+            text=mainColor, font=\small\itshape]
+        {\faImage\enspace\texttt{\detokenize{#2}}\\[3pt]
+         \scriptsize\textcolor{codeGray}{#3}};
+    \end{tikzpicture}%
+  }%
+  \end{center}
+}
+
+% ─────────────────────────────────────────────────────────────
+%  CAJA DE CONCEPTO
+% ─────────────────────────────────────────────────────────────
+\newtcolorbox{conceptbox}[1]{
+  colback=bgLight, colframe=mainColor,
+  title={\small #1}, fonttitle=\bfseries,
+  coltitle=white, colbacktitle=mainColor,
+  arc=4pt, boxrule=0.6pt,
+  left=4pt, right=4pt, top=2pt, bottom=2pt
+}
+
+\newcommand{\tech}[1]{\texttt{\textcolor{mainColor}{#1}}}
+
+% ─────────────────────────────────────────────────────────────
+%  PORTADA
+% ─────────────────────────────────────────────────────────────
+\title{Laboratorio Integrador\\de Geoinformática}
+\subtitle{Semestre 1, 2026 · Universidad de Santiago de Chile}
+\author{Byron Caices Lima \\ \small Ayudante --- Ingeniería Civil en Informática}
+\date{\today}
+% \titlegraphic{\includegraphics[height=1.2cm]{usach_logo.png}}
+
+\begin{document}
+
+\maketitle
+
+% ─────────────────────────────────────────────────────────────
+%  1. QUIÉN SOY
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Quién soy}
+  \begin{columns}[T]
+    \begin{column}{0.63\textwidth}
+      \small
+      \textbf{Formación}
+      \begin{itemize}\setlength\itemsep{2pt}
+        \item Estudiante de Ingeniería Civil en Informática, USACH (Licenciado).
+        \item Me dedico principalmente a \textbf{Backend, Full-Stack e Infraestructura Cloud}.
+        \item Mi base, igual que la de ustedes, es \textbf{informática}, no geografía.
+              La diferencia es que ya cursé este laboratorio.
+      \end{itemize}
+      \vspace{0.25cm}
+      \textbf{Mi proyecto en el ramo (como alumno)}
+      \begin{itemize}\setlength\itemsep{2pt}
+        \item \textit{Asesor inmobiliario virtual:} fusión de análisis geoespacial,
+              datos censales y ML para hacer \textit{match} entre la vivienda ideal
+              en Santiago y la realidad socioeconómica del usuario.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.34\textwidth}
+      % IMAGEN 1: Tu foto o avatar. Pon image1.jpg junto al .tex para reemplazar.
+      \img{image1.jpg}{Foto o avatar del ayudante}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  2. ROL
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Mi rol: ¿en qué los voy a ayudar?}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{conceptbox}{\faCode\enspace Lo que \textit{sí} haré}
+        \begin{itemize}\small\setlength\itemsep{1pt}
+          \item Revisar estructura de código y repositorio
+          \item Depurar errores de entorno y dependencias
+          \item Guiar decisiones de arquitectura de software
+          \item \textbf{Exigir buenas prácticas de ingeniería}
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{conceptbox}{\faGlobeAmericas\enspace Dónde el profe les puede ayudar +}
+        \begin{itemize}\small\setlength\itemsep{1pt}
+          \item Teoría de proyecciones cartográficas
+          \item Interpretación de índices espectrales
+          \item Metodología geoespacial profunda
+          \item Validación del enfoque científico
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+  \vspace{0.25cm}
+  \begin{alertblock}{\faLightbulb\enspace Idea simple}
+    \centering\small
+    Duda de \textbf{código, entorno o estructura} \textrightarrow{} yo.\quad
+    Duda de \textbf{geografía o metodología} \textrightarrow{} el profesor.
+  \end{alertblock}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  3. TIPOS DE DATOS
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Geoinformática para Informáticos: Tipos de Datos}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{conceptbox}{\faDrawPolygon\enspace Datos Vectoriales}
+        \small
+        \textbf{¿Qué son?} Geometrías discretas: puntos, líneas y polígonos.\\[3pt]
+        \textbf{Analogía IT:} Filas en SQL con columna \tech{geometry}.\\[3pt]
+        \textbf{Librerías:} \tech{GeoPandas} · \tech{Shapely}
+      \end{conceptbox}
+      \vspace{0.1cm}
+      % IMAGEN 2: Mapa vectorial. Pon image2.jpg junto al .tex para reemplazar.
+      \img[0.88\linewidth]{image2.jpeg}{Mapa vectorial: zonas censales de Santiago}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{conceptbox}{\faTh\enspace Datos Raster}
+        \small
+        \textbf{¿Qué son?} Grillas espaciales: imágenes satelitales, temperatura, NDVI.\\[3pt]
+        \textbf{Analogía IT:} Array NumPy 2D/3D donde cada celda tiene coordenada.\\[3pt]
+        \textbf{Librerías:} \tech{Rasterio} · \tech{Xarray}
+      \end{conceptbox}
+      \vspace{0.1cm}
+      % IMAGEN 3: Imagen Sentinel. Pon image3.jpg junto al .tex para reemplazar.
+      \img[0.88\linewidth]{image3.jpg}{Imagen Sentinel-2 RGB de Santiago}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  4. EPSG:32719
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Sistema de Referencia Espacial: ¿Qué es EPSG:32719?}
+  \begin{columns}[T]
+    \begin{column}{0.57\textwidth}
+      \small
+      La Tierra es esférica. Un mapa es plano. \textbf{Proyectar} es la función
+      que convierte una en el otro, y cada proyección tiene un código
+      \textbf{EPSG} estandarizado.\\[6pt]
+      \begin{itemize}\setlength\itemsep{4pt}
+        \item \textbf{EPSG:4326 --- WGS84}\\
+              Coordenadas en \textit{grados} (lat / lon).
+              Para \textbf{almacenar y compartir}.
+              Es el sistema de tu GPS y Google Maps.
+        \item \textbf{EPSG:32719 --- UTM Zona 19S}\\
+              Coordenadas en \textit{metros}.
+              Para \textbf{calcular distancias, áreas y buffers}
+              sobre Chile continental.
+      \end{itemize}
+      \vspace{0.2cm}
+      \begin{alertblock}{\faSyncAlt\enspace Regla práctica}
+        \small
+        Guarda en \tech{4326}.\quad Calcula en \tech{32719}.\\[2pt]
+        \tech{gdf = gdf.to\_crs(epsg=32719)}
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.40\textwidth}
+      % IMAGEN 4: Diagrama UTM. Pon image4.jpg junto al .tex para reemplazar.
+      \img{image4.jpg}{Diagrama UTM Zona 19S sobre Chile}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  5. ENTREGABLES
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Reglas del Juego: Entregables del Proyecto}
+  \begin{columns}[T]
+    \begin{column}{0.57\textwidth}
+      \small
+      Todo proyecto debe cumplir con los siguientes requisitos técnicos:
+      \vspace{0.15cm}
+      \begin{itemize}\setlength\itemsep{4pt}
+        \item[\textcolor{accentColor}{\faCompass}]
+          Proyección estándar \textbf{EPSG:32719} para todos los cálculos en Chile.
+        \item[\textcolor{accentColor}{\faMap}]
+          Mínimo \textbf{5 mapas temáticos} (título, leyenda, escala, norte)
+          y \textbf{8 gráficos}.
+        \item[\textcolor{accentColor}{\faFileAlt}]
+          Informe técnico en \LaTeX{} o Markdown: \textbf{25--35 páginas}.
+        \item[\textcolor{accentColor}{\faChartBar}]
+          \textbf{Dashboard interactivo} con Folium, Streamlit o Panel.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.40\textwidth}
+      % IMAGEN 5: Mapa temático. Pon image5.jpg junto al .tex para reemplazar.
+      \img{image5.jpg}{Ejemplo de mapa temático con leyenda y escala}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  6. PIPELINE REPRODUCIBLE
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{El Estándar: Pipeline 100\,\% Reproducible}
+  \begin{columns}[T]
+    \begin{column}{0.67\textwidth}
+      \begin{alertblock}{\faExclamationTriangle\enspace Regla de oro}
+        \small\textbf{No instalaremos nada manualmente} para evaluar su proyecto.
+        Todo debe correr desde cero con un solo comando.
+      \end{alertblock}
+      \vspace{0.2cm}
+      \small El repositorio debe incluir:
+      \begin{enumerate}\setlength\itemsep{2pt}
+        \item \textbf{GitHub público} con historial de commits real.
+        \item \textbf{Docker + Docker Compose} para aislar el entorno
+              y resolver conflictos de dependencias geográficas.
+        \item Script \tech{setup.sh} / \tech{run.bat} que:
+              \begin{itemize}\setlength\itemsep{1pt}
+                \item Levante los contenedores.
+                \item Instale dependencias geográficas.
+                \item Levante la BD y ejecute el autopoblado.
+              \end{itemize}
+      \end{enumerate}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      % IMAGEN 6: Docker Compose. Pon image6.jpg junto al .tex para reemplazar.
+      \img{image6.jpg}{Diagrama Docker Compose: Jupyter + PostGIS + Streamlit}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  7a. ARQUITECTURA REPO — 1 / 2
+% ─────────────────────────────────────────────────────────────
+\begin{frame}[fragile]{Arquitectura del Repositorio (1 / 2)}
+\footnotesize
+\begin{verbatim}
+laboratorio_integrador/
+├── README.md                  # Descripción del proyecto
+├── requirements.txt           # Dependencias Python
+├── docker-compose.yml         # Orquestación de contenedores
+├── .env                       # Variables de entorno  ← NO subir a Git
+├── .gitignore                 # Excluye datos pesados (rásteres, etc.)
+│
+├── docker/
+│   ├── jupyter/               # Imagen personalizada de Jupyter
+│   ├── postgis/               # Inicialización de PostGIS
+│   └── web/                   # Imagen de la app web
+│
+├── data/
+│   ├── raw/                   # Datos originales sin procesar
+│   ├── processed/             # Datos procesados y limpios
+│   └── external/              # Fuentes externas (INE, Copernicus…)
+│
+└── notebooks/
+    ├── 01_data_acquisition.ipynb
+    ├── 02_exploratory_analysis.ipynb
+    ├── 03_geostatistics.ipynb
+    ├── 04_machine_learning.ipynb
+    └── 05_results_synthesis.ipynb
+\end{verbatim}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  7b. ARQUITECTURA REPO — 2 / 2
+% ─────────────────────────────────────────────────────────────
+\begin{frame}[fragile]{Arquitectura del Repositorio (2 / 2)}
+\footnotesize
+\begin{verbatim}
+laboratorio_integrador/                         (continuación)
+│
+├── scripts/
+│   ├── download_data.py       # Descarga automatizada de datos
+│   ├── process_data.py        # Pipeline de procesamiento
+│   ├── spatial_analysis.py    # Análisis espacial reutilizable
+│   └── utils.py               # Funciones auxiliares comunes
+│
+├── app/
+│   ├── main.py                # Punto de entrada Streamlit
+│   ├── pages/                 # Vistas del dashboard
+│   └── components/            # Componentes reutilizables
+│
+├── outputs/
+│   ├── figures/               # Gráficos y mapas generados
+│   ├── models/                # Modelos ML serializados
+│   └── reports/               # Informes y documentos finales
+│
+└── docs/
+    ├── guia_usuario.md
+    ├── arquitectura.md
+    └── api_reference.md
+\end{verbatim}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  8. CALENDARIO
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Calendario de Hitos Clave}
+  \vspace{-0.1cm}
+  \begin{center}
+  \begin{tikzpicture}[font=\small, >=Stealth]
+    \draw[->, line width=1.2pt, color=mainColor] (0,0) -- (12.4,0);
+    \foreach \x/\fecha/\hitoa/\hitob in {
+      0.3/{14 abr}/{Grupos y}/{3 desafíos},
+      2.8/{28 abr}/{Desafío}/{final},
+      5.5/{26 may}/{PEP 1}/{ },
+      8.5/{25 jun}/{Pipeline}/{en Docker},
+      11.8/{23 jul}/{PEP 2}/{Demo Day}%
+    }{
+      \fill[accentColor] (\x,0) circle (3.5pt);
+      \node[above=5pt, align=center, text=codeGray, font=\scriptsize]
+        at (\x,0) {\hitoa\\\hitob};
+      \node[below=5pt, align=center, text=accentColor, font=\scriptsize\bfseries]
+        at (\x,0) {\fecha};
+    }
+  \end{tikzpicture}
+  \end{center}
+  \vspace{0.15cm}
+  \begin{columns}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\faClipboardList\enspace PEP 1 --- 26 de mayo}
+        \small Documento de validación + Avance pipeline + inicio de EDA.
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\faTrophy\enspace PEP 2 --- 23 de julio}
+        \small Dashboard final completo + defensa oral (Demo Day).
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  9. TAREAS PARA HOY
+% ─────────────────────────────────────────────────────────────
+% ─────────────────────────────────────────────────────────────
+%  9. TAREAS PARA HOY
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Para Hoy y la Próxima Clase}
+  \begin{columns}[T]
+    \begin{column}{0.67\textwidth}
+      \small
+      \begin{enumerate}\setlength\itemsep{4pt}
+        \item \textbf{Armar los grupos} (1 a 3 integrantes).
+        \item \textbf{Revisar el catálogo:} analicen los 12 desafíos
+              disponibles. Elijan según lo que prefieran trabajar.
+        \item \textbf{Crear el repositorio} en GitHub con la
+              estructura de los slides anteriores.
+        \item \textbf{Instalar Docker Desktop} en sus máquinas
+              y verificar que corre.
+        \item \textbf{Subir el link del repositorio} a la sección
+              de Laboratorio habilitada en \textbf{UVirtual}.
+      \end{enumerate}
+      \vspace{0.15cm}
+      \begin{alertblock}{}
+        \centering\small
+        Al terminar la sesión: cada grupo debe tener
+        \textbf{repo creado, al menos un commit y el link entregado en UVirtual}.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.40\textwidth}
+      % IMAGEN 7: Repo GitHub. Pon image7.jpg junto al .tex para reemplazar.
+      \img{image7.jpg}{Captura GitHub: repo con estructura inicial}
+      \vspace{0.2cm}
+      \centering\large\textbf{¡Manos a la obra!}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,626 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{metropolis}
+
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, babel}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\usepackage{fontawesome5}
+\usepackage{amsmath}
+
+% ─────────────────────────────────────────────────────────────
+%  PALETA
+% ─────────────────────────────────────────────────────────────
+\definecolor{mainColor}{HTML}{00a499}
+\definecolor{accentColor}{HTML}{EA7600}
+\definecolor{bgLight}{HTML}{E6F7F6}
+\definecolor{codeGray}{HTML}{2B2B2B}
+
+% ─────────────────────────────────────────────────────────────
+%  METROPOLIS
+% ─────────────────────────────────────────────────────────────
+\setbeamercolor{normal text}{fg=codeGray, bg=white}
+\setbeamercolor{frametitle}{bg=mainColor, fg=white}
+\setbeamercolor{alerted text}{fg=accentColor}
+\setbeamercolor{progress bar}{fg=accentColor, bg=mainColor!25}
+\setbeamercolor{block title}{bg=mainColor, fg=white}
+\setbeamercolor{block body}{bg=bgLight, fg=codeGray}
+\setbeamercolor{block title alerted}{bg=accentColor, fg=white}
+\setbeamercolor{block body alerted}{bg=accentColor!10, fg=codeGray}
+\metroset{progressbar=frametitle, sectionpage=none, numbering=fraction}
+\usepackage{hyperref}
+% ─────────────────────────────────────────────────────────────
+%  CAJA DE CONCEPTO
+% ─────────────────────────────────────────────────────────────
+\newtcolorbox{conceptbox}[1]{
+  colback=bgLight, colframe=mainColor,
+  title={\small #1}, fonttitle=\bfseries,
+  coltitle=white, colbacktitle=mainColor,
+  arc=4pt, boxrule=0.6pt,
+  left=4pt, right=4pt, top=2pt, bottom=2pt
+}
+
+\newcommand{\tech}[1]{\texttt{\textcolor{mainColor}{#1}}}
+
+\hypersetup{colorlinks=true, urlcolor=mainColor}
+
+% ─────────────────────────────────────────────────────────────
+%  PORTADA
+% ─────────────────────────────────────────────────────────────
+\title{Modelos de Inteligencia Artificial en Negocios\\{\normalsize |}\\ Inteligencia Artificial Aplicada a la Industria\\{\tiny Clase 1: Introducción y Primeros Pasos}}
+\subtitle{{\small Semestre 1, 2026 · Universidad de Santiago de Chile}}
+\author{\href{https://www.linkedin.com/in/byron-caices/}{Byron Caices Lima} \\ \small Departamento de Ingeniería Industrial}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+% =============================================================
+%  SECCIÓN 1: BIENVENIDA Y CONTEXTO DEL CURSO
+% =============================================================
+
+% ─────────────────────────────────────────────────────────────
+%  1. BIENVENIDA
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Bienvenidos al Curso}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \small
+      \textbf{¿De qué se trata este curso?}
+      \begin{itemize}\setlength\itemsep{4pt}
+        \item Capacitar a futuros ingenieros civiles industriales en los
+              \textbf{fundamentos estratégicos} de la IA.
+        \item No es un curso de programación: el foco está en
+              \textbf{comprender, evaluar y aplicar} soluciones de IA
+              en contextos industriales.
+        \item Integraremos dimensiones \textbf{éticas, tecnológicas
+              y organizacionales}.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{conceptbox}{\faRocket\enspace Objetivo General}
+        \small
+        Proporcionar herramientas conceptuales para comprender y aplicar
+        la IA como \textbf{herramienta de gestión estratégica} y toma
+        de decisiones en la industria.
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  2. ESTRUCTURA DEL CURSO
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Estructura del Curso: 16 Semanas}
+  \small
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\faBookOpen\enspace Unidades 1--5}
+        \begin{enumerate}\setlength\itemsep{2pt}
+          \item Introducción a la IA
+          \item IA Estratégica
+          \item Datos para IA
+          \item Aprendizaje Automático
+          \item Modelos Neuronales
+        \end{enumerate}
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\faCogs\enspace Unidades 6--10}
+        \begin{enumerate}\setcounter{enumi}{5}\setlength\itemsep{2pt}
+          \item Arquitecturas Avanzadas
+          \item Evaluación de Soluciones
+          \item Ética y Regulación
+          \item Oportunidades Emergentes
+          \item Proyecto Final
+        \end{enumerate}
+      \end{block}
+    \end{column}
+  \end{columns}
+  \vspace{0.3cm}
+  \begin{alertblock}{\faBalanceScale\enspace Evaluación}
+    \centering\small
+    \textbf{Informes de Laboratorio} (50\,\%) \quad+\quad
+    \textbf{Proyecto Final Grupal} (50\,\%)
+  \end{alertblock}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  3. METODOLOGÍA
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Metodología: ¿Cómo Trabajaremos?}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{conceptbox}{\faChalkboardTeacher\enspace Clases Teóricas}
+        \small
+        Sesiones presenciales con fundamentos conceptuales y
+        análisis crítico de \textbf{casos reales} en logística,
+        manufactura y salud.
+      \end{conceptbox}
+      \vspace{0.15cm}
+      \begin{conceptbox}{\faFlask\enspace Laboratorios Interpretativos}
+        \small
+        Ejecutarán código Python \textbf{ya desarrollado} en
+        Google Colab. El foco es \textbf{interpretar resultados},
+        no programar desde cero.
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{conceptbox}{\faSearch\enspace Análisis de Casos}
+        \small
+        Estudio de aplicaciones reales en marketing, operaciones
+        y otros sectores industriales.
+      \end{conceptbox}
+      \vspace{0.15cm}
+      \begin{conceptbox}{\faProjectDiagram\enspace Proyecto Final}
+        \small
+        Propuesta estratégica grupal basada en la interpretación
+        de una solución de IA para un \textbf{problema industrial real}.
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  4. HERRAMIENTAS
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Ecosistema Tecnológico del Curso}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\faPython\enspace Lenguaje y Entorno}
+        \small
+        \begin{itemize}\setlength\itemsep{3pt}
+          \item \textbf{Python} (uso interpretativo, no necesitan
+                ser expertos).
+          \item \textbf{Google Colab} / Jupyter Notebook como
+                entorno en la nube.
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\faBoxes\enspace Librerías Principales}
+        \small
+        \begin{itemize}\setlength\itemsep{3pt}
+          \item \tech{Pandas} y \tech{Numpy} --- Manejo de datos.
+          \item \tech{Matplotlib} --- Visualización.
+          \item \tech{Scikit-learn} --- Machine Learning.
+          \item \tech{Keras} / \tech{TensorFlow} --- Deep Learning.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+  \vspace{0.3cm}
+  \begin{alertblock}{\faLightbulb\enspace Tranquilos}
+    \centering\small
+    No necesitan instalar nada en su computador.
+    Todo se ejecuta desde el \textbf{navegador} con Google Colab.
+  \end{alertblock}
+\end{frame}
+
+% =============================================================
+%  SECCIÓN 2: GOOGLE COLAB
+% =============================================================
+
+% ─────────────────────────────────────────────────────────────
+%  5. ¿QUÉ ES GOOGLE COLAB?
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{¿Qué es Google Colab?}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \small
+      Piensen en Google Colab como un \textbf{``cuaderno mágico''}
+      que vive en su navegador:
+      \begin{itemize}\setlength\itemsep{4pt}
+        \item Permite ejecutar código \textbf{Python} sin instalar
+              absolutamente nada.
+        \item Es un entorno \textbf{gratuito} basado en Jupyter Notebook
+              que vive en la nube de Google.
+        \item Es su \textbf{laboratorio personal} para programar y
+              analizar datos desde cualquier lugar.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{conceptbox}{\faCloud\enspace En Resumen}
+        \small
+        Google Colab = \\[3pt]
+        \textbf{Navegador} + \textbf{Python} + \textbf{Nube}\\[3pt]
+        Sin instalaciones. \\
+        Sin configuraciones. \\
+        Solo necesitan una cuenta de Google.
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  6. VENTAJAS DE COLAB
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Ventajas Clave de Google Colab}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{conceptbox}{\faLaptop\enspace Sin Instalación}
+        \small
+        Acceso directo desde el navegador. Nada de configuraciones
+        complejas ni problemas de compatibilidad.
+      \end{conceptbox}
+      \vspace{0.15cm}
+      \begin{conceptbox}{\faMicrochip\enspace GPU/TPU Gratuitas}
+        \small
+        Hardware potente sin costo para acelerar cálculos de
+        Machine Learning cuando lo necesiten.
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{conceptbox}{\faGlobe\enspace Accesible Globalmente}
+        \small
+        Trabajen desde cualquier dispositivo con conexión a internet.
+        Solo necesitan un navegador.
+      \end{conceptbox}
+      \vspace{0.15cm}
+      \begin{conceptbox}{\faGoogleDrive\enspace Integración con Drive}
+        \small
+        Guarden, organicen y compartan sus cuadernos a través de
+        Google Drive de forma automática.
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  7. PRIMEROS PASOS
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Primeros Pasos en Google Colab}
+  \vspace{0.2cm}
+  \begin{center}
+  \begin{tikzpicture}[font=\small,
+    step/.style={draw=mainColor, fill=bgLight, rounded corners=4pt,
+                 minimum width=3.2cm, minimum height=1.6cm,
+                 align=center, text=codeGray}]
+    \node[step] (s1) at (0,0)
+      {\textbf{Paso 1}\\[2pt]\scriptsize Abrir\\
+       \tech{colab.google.com}\\
+       \scriptsize con cuenta Google};
+    \node[step] (s2) at (5,0)
+      {\textbf{Paso 2}\\[2pt]\scriptsize Menú \textit{Archivo}\\
+       \scriptsize $\rightarrow$ \textit{Nuevo cuaderno}};
+    \node[step] (s3) at (10,0)
+      {\textbf{Paso 3}\\[2pt]\scriptsize Se guarda solo\\
+       \scriptsize en \textit{Colab Notebooks}\\
+       \scriptsize de Google Drive};
+    \draw[-{Stealth}, thick, color=mainColor] (s1) -- (s2);
+    \draw[-{Stealth}, thick, color=mainColor] (s2) -- (s3);
+  \end{tikzpicture}
+  \end{center}
+  \vspace{0.3cm}
+  \begin{alertblock}{\faLightbulb\enspace Tip}
+    \centering\small
+    Pueden acceder directamente desde \tech{colab.research.google.com}
+    con su cuenta institucional o personal de Google.
+  \end{alertblock}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  8. ESTRUCTURA DE UN CUADERNO
+% ─────────────────────────────────────────────────────────────
+\begin{frame}[fragile]{Estructura de un Cuaderno: Celdas}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{conceptbox}{\faCode\enspace Celdas de Código}
+        \small
+        Aquí se escribe y ejecuta Python.\\[4pt]
+        \textbf{¿Cómo ejecutar?}\\
+        Botón \textit{Play} o \tech{Shift + Enter}\\[4pt]
+        \textbf{Ejemplo:}
+\begin{verbatim}
+print("¡Hola, mundo!")
+2 + 3
+\end{verbatim}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{conceptbox}{\faFileAlt\enspace Celdas de Texto (Markdown)}
+        \small
+        Sirven para \textbf{documentar y explicar} el trabajo.\\[4pt]
+        \textbf{Formato básico:}
+\begin{verbatim}
+# Título grande
+## Subtítulo
+**negrita** y *cursiva*
+- Lista con viñetas
+\end{verbatim}
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+  \vspace{0.2cm}
+  \centering\small
+  Un cuaderno de Colab alterna celdas de código y texto para crear
+  un \textbf{documento interactivo} y reproducible.
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  9. PRIMER CÓDIGO
+% ─────────────────────────────────────────────────────────────
+\begin{frame}[fragile]{¡Hola, Mundo en la Nube!}
+  \begin{block}{\faPython\enspace Tu primer código en Google Colab}
+    \small Copien esto en una celda de código y presionen \tech{Shift + Enter}:
+  \end{block}
+  \vspace{0.2cm}
+\begin{verbatim}
+    # Esta es una celda de código en Google Colab
+    print("¡Hola, mundo en Colab!")
+
+    # Python como calculadora
+    precio = 15000
+    cantidad = 3
+    total = precio * cantidad
+    print(f"El total es: ${total}")
+\end{verbatim}
+  \vspace{0.2cm}
+  \begin{alertblock}{\faCheckCircle\enspace Si ven el resultado...}
+    \centering\small
+    ¡Felicidades! Ya están ejecutando Python en la nube.
+    No necesitaron instalar nada.
+  \end{alertblock}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  10. CONSEJOS PRÁCTICOS
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Consejos Prácticos para Google Colab}
+  \begin{columns}[T]
+    \begin{column}{0.32\textwidth}
+      \begin{conceptbox}{\faTachometerAlt\enspace Runtime}
+        \small
+        Si el proyecto es pesado, activen la GPU en:\\[3pt]
+        \textit{Entorno de ejecución} $\rightarrow$
+        \textit{Cambiar tipo de entorno}.
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \begin{conceptbox}{\faSave\enspace Guardar Avances}
+        \small
+        Es automático, pero para versiones importantes usen:\\[3pt]
+        \textit{Archivo} $\rightarrow$
+        \textit{Guardar copia en Drive}.
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \begin{conceptbox}{\faCommentDots\enspace Comentar Código}
+        \small
+        Usen el símbolo \tech{\#} para que el código sea
+        comprensible para ustedes y para otros.
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+  \vspace{0.3cm}
+  \centering\small
+  Recuerden: Colab se domina con la \textbf{práctica}.
+  No tengan miedo de experimentar y equivocarse.
+\end{frame}
+
+% =============================================================
+%  SECCIÓN 3: INTRODUCCIÓN A MACHINE LEARNING
+% =============================================================
+
+% ─────────────────────────────────────────────────────────────
+%  11. ¿QUÉ ES MACHINE LEARNING?
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Introducción a Machine Learning}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \small
+      \textbf{Machine Learning} (Aprendizaje Automático) es una rama
+      de la Inteligencia Artificial que permite a las máquinas
+      \textbf{aprender a partir de datos} sin ser programadas
+      explícitamente.\\[8pt]
+      En lugar de instrucciones paso a paso, se usan
+      \textbf{ejemplos} para que el sistema busque patrones
+      y pueda \textbf{predecir o clasificar} información nueva.
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{conceptbox}{\faBrain\enspace Idea Central}
+        \small
+        \textbf{Programación clásica:}\\
+        Datos + Reglas $\rightarrow$ Resultado\\[6pt]
+        \textbf{Machine Learning:}\\
+        Datos + Resultados $\rightarrow$ Reglas\\[6pt]
+        La máquina \textit{descubre} las reglas
+        a partir de los datos.
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  12. TIPOS DE APRENDIZAJE (CONTEXTO)
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Tipos de Aprendizaje Automático}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{conceptbox}{\faTag\enspace Supervisado}
+        \small
+        Le damos al modelo datos \textbf{con etiquetas}
+        (la respuesta correcta).\\[4pt]
+        \textbf{Ejemplos industriales:}
+        \begin{itemize}\setlength\itemsep{2pt}
+          \item Predecir demanda de productos.
+          \item Clasificar piezas como defectuosas o no.
+          \item Estimar precios de venta.
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{conceptbox}{\faObjectGroup\enspace No Supervisado}
+        \small
+        Los datos \textbf{no tienen etiquetas}. El modelo
+        busca patrones por sí solo.\\[4pt]
+        \textbf{Ejemplos industriales:}
+        \begin{itemize}\setlength\itemsep{2pt}
+          \item Segmentar clientes por comportamiento.
+          \item Detectar anomalías en producción.
+          \item Agrupar productos similares.
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  13. ÁRBOLES DE DECISIÓN
+% ─────────────────────────────────────────────────────────────
+\begin{frame}[fragile]{Árboles de Decisión}
+  \begin{columns}[T]
+    \begin{column}{0.50\textwidth}
+      \small
+      Un árbol de decisión funciona como un \textbf{diagrama de flujo}:
+      cada ``pregunta'' lleva a una rama distinta hasta llegar
+      a una clasificación final.\\[8pt]
+      \textbf{Ejemplo cotidiano:}
+      \begin{enumerate}\setlength\itemsep{2pt}
+        \item ¿Edad $>$ 18? \textbf{Sí}
+        \item ¿Tiene licencia? \textbf{No}
+        \item Resultado: \textcolor{accentColor}{\textbf{No puede alquilar auto}}
+      \end{enumerate}
+      \vspace{0.2cm}
+      \textbf{En Python:}
+\begin{verbatim}
+from sklearn.tree import (
+    DecisionTreeClassifier
+)
+model = DecisionTreeClassifier()
+# model.fit(datos, etiquetas)
+\end{verbatim}
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \begin{center}
+      \begin{tikzpicture}[
+        font=\scriptsize,
+        level distance=1.3cm,
+        sibling distance=2.2cm,
+        edge from parent/.style={draw, ->, thick, mainColor},
+        every node/.style={draw=mainColor, fill=bgLight, rounded corners=3pt,
+                          align=center, minimum width=1.8cm, inner sep=3pt}
+      ]
+        \node {¿Edad $>$ 18?}
+          child { node {¿Licencia?}
+            child { node[fill=mainColor!20] {\textbf{Sí puede}} edge from parent node[left, draw=none, fill=none] {Sí} }
+            child { node[fill=accentColor!20] {\textbf{No puede}} edge from parent node[right, draw=none, fill=none] {No} }
+            edge from parent node[left, draw=none, fill=none] {Sí}
+          }
+          child { node[fill=accentColor!20] {\textbf{No puede}} edge from parent node[right, draw=none, fill=none] {No} };
+      \end{tikzpicture}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  14. REGRESIÓN LINEAL
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Regresión Lineal}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \small
+      Método para predecir un \textbf{valor numérico continuo}
+      encontrando la \textbf{mejor línea recta} que se ajuste
+      a los datos.\\[8pt]
+      \textbf{La ecuación:}
+      \begin{equation*}
+        y = mx + b
+      \end{equation*}
+      Donde:
+      \begin{itemize}\setlength\itemsep{2pt}
+        \item $y$ = valor predicho (ej: precio de venta).
+        \item $x$ = variable de entrada (ej: metros cuadrados).
+        \item $m$ = pendiente (cuánto cambia $y$ por cada unidad de $x$).
+        \item $b$ = intersección (valor base).
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{conceptbox}{\faChartLine\enspace Aplicaciones Industriales}
+        \small
+        \begin{itemize}\setlength\itemsep{3pt}
+          \item Predecir \textbf{ventas futuras} a partir de datos históricos.
+          \item Estimar \textbf{costos de producción}.
+          \item Proyectar \textbf{demanda} de productos.
+          \item Calcular \textbf{precio} de una propiedad según sus características.
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  15. IA vs ML vs DL
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{IA vs. Machine Learning vs. Deep Learning}
+  \begin{center}
+  \begin{tikzpicture}
+    % Outer circle - IA
+    \fill[mainColor!15] (0,0) circle (3.5cm);
+    \draw[mainColor, thick] (0,0) circle (3.5cm);
+    \node[font=\small\bfseries, text=mainColor] at (0, 3.0) {Inteligencia Artificial};
+    \node[font=\scriptsize, text=codeGray, align=center] at (2.2, 2.2)
+      {Sistemas que imitan\\la inteligencia humana};
+
+    % Middle circle - ML
+    \fill[accentColor!15] (0,-0.3) circle (2.3cm);
+    \draw[accentColor, thick] (0,-0.3) circle (2.3cm);
+    \node[font=\small\bfseries, text=accentColor] at (0, 1.6) {Machine Learning};
+    \node[font=\scriptsize, text=codeGray, align=center] at (0, 0.9)
+      {Aprende de datos\\sin programación explícita};
+
+    % Inner circle - DL
+    \fill[mainColor!30] (0,-0.8) circle (1.1cm);
+    \draw[mainColor, thick] (0,-0.8) circle (1.1cm);
+    \node[font=\small\bfseries, text=codeGray, align=center] at (0,-0.8)
+      {Deep\\Learning};
+  \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  16. CIERRE
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{¡El Viaje Apenas Comienza!}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \small
+      \textbf{Hoy aprendimos:}
+      \begin{itemize}\setlength\itemsep{4pt}
+        \item[\textcolor{mainColor}{\faCheck}] Qué es este curso y cómo se evalúa.
+        \item[\textcolor{mainColor}{\faCheck}] Qué es Google Colab y cómo usarlo.
+        \item[\textcolor{mainColor}{\faCheck}] Los conceptos básicos de Machine Learning.
+        \item[\textcolor{mainColor}{\faCheck}] Qué son los árboles de decisión y la regresión lineal.
+      \end{itemize}
+      \vspace{0.3cm}
+      \textbf{Próximas sesiones:}
+      \begin{itemize}\setlength\itemsep{3pt}
+        \item IA como ventaja competitiva.
+        \item Librerías esenciales de Python.
+        \item Manejo de datasets reales.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{alertblock}{\faLightbulb\enspace Para la próxima clase}
+        \small
+        \begin{enumerate}\setlength\itemsep{3pt}
+          \item Crear cuenta en Google (si no tienen).
+          \item Entrar a \tech{colab.research.google.com}.
+          \item Crear un cuaderno nuevo y ejecutar:\\
+                \tech{print("Listo")}
+        \end{enumerate}
+      \end{alertblock}
+      \vspace{0.3cm}
+      \centering
+      \large\textbf{¡Prepárense para transformar\\datos en conocimiento!}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\end{document}
