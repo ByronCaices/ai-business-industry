@@ -1,0 +1,538 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{metropolis}
+
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, babel}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\usepackage{fontawesome5}
+\usepackage{amsmath}
+
+% ─────────────────────────────────────────────────────────────
+%  PALETA
+% ─────────────────────────────────────────────────────────────
+\definecolor{mainColor}{HTML}{00a499}
+\definecolor{accentColor}{HTML}{EA7600}
+\definecolor{bgLight}{HTML}{E6F7F6}
+\definecolor{codeGray}{HTML}{2B2B2B}
+
+% ─────────────────────────────────────────────────────────────
+%  METROPOLIS
+% ─────────────────────────────────────────────────────────────
+\setbeamercolor{normal text}{fg=codeGray, bg=white}
+\setbeamercolor{frametitle}{bg=mainColor, fg=white}
+\setbeamercolor{alerted text}{fg=accentColor}
+\setbeamercolor{progress bar}{fg=accentColor, bg=mainColor!25}
+\setbeamercolor{block title}{bg=mainColor, fg=white}
+\setbeamercolor{block body}{bg=bgLight, fg=codeGray}
+\setbeamercolor{block title alerted}{bg=accentColor, fg=white}
+\setbeamercolor{block body alerted}{bg=accentColor!10, fg=codeGray}
+\metroset{progressbar=frametitle, sectionpage=none, numbering=fraction}
+\usepackage{hyperref}
+
+% ─────────────────────────────────────────────────────────────
+%  CAJA DE CONCEPTO
+% ─────────────────────────────────────────────────────────────
+\newtcolorbox{conceptbox}[1]{
+  colback=bgLight, colframe=mainColor,
+  title={\small #1}, fonttitle=\bfseries,
+  coltitle=white, colbacktitle=mainColor,
+  arc=4pt, boxrule=0.6pt,
+  left=4pt, right=4pt, top=2pt, bottom=2pt
+}
+
+\newcommand{\tech}[1]{\texttt{\textcolor{mainColor}{#1}}}
+
+\hypersetup{colorlinks=true, urlcolor=mainColor}
+
+% ─────────────────────────────────────────────────────────────
+%  PORTADA
+% ─────────────────────────────────────────────────────────────
+\title{Modelos de Inteligencia Artificial en Negocios\\{\normalsize |}\\ Inteligencia Artificial Aplicada a la Industria\\{\tiny Clase 2: Bases de Datos y Calidad de Datos}}
+\subtitle{{\small Semestre 1, 2026 · Universidad de Santiago de Chile}}
+\author{\href{https://www.linkedin.com/in/byron-caices/}{Byron Caices Lima} \\ \small Departamento de Ingeniería Industrial}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+% =============================================================
+%  AGENDA
+% =============================================================
+
+\begin{frame}{¿Qué Veremos Hoy?}
+  \small
+  \begin{columns}[T]
+    \begin{column}{0.32\textwidth}
+      \begin{conceptbox}{\faDatabase\enspace Parte 1}
+        \small
+        \textbf{Bases de datos}\\[4pt]
+        Qué son, tipos (SQL y NoSQL) y cómo se ven por dentro.
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \begin{conceptbox}{\faFileCsv\enspace Parte 2}
+        \small
+        \textbf{El CSV y los datos}\\[4pt]
+        El archivo más común en la industria y por qué es crítico limpiarlo antes de usar IA.
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \begin{conceptbox}{\faFlask\enspace Parte 3}
+        \small
+        \textbf{Laboratorio práctico}\\[4pt]
+        Limpiaremos datos reales de manufactura en Google Colab.
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+  \vspace{0.3cm}
+  \begin{alertblock}{\faLightbulb\enspace Objetivo de la sesión}
+    \centering\small
+    Entender que \textbf{sin datos limpios, no hay IA que funcione} --- y aprender qué hacer al respecto.
+  \end{alertblock}
+\end{frame}
+
+% =============================================================
+%  PARTE 1: BASES DE DATOS
+% =============================================================
+
+% ─────────────────────────────────────────────────────────────
+%  1. ¿QUÉ ES UNA BASE DE DATOS?
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{¿Qué es una Base de Datos?}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \small
+      Piensen en el \textbf{archivo físico} de una empresa: cajones con carpetas, fichas de empleados, registros de ventas.
+      Una base de datos es exactamente eso, pero \textbf{digitalizado y organizado} para que las máquinas lo lean y procesen rápido.
+
+      \vspace{0.4cm}
+      \begin{itemize}\setlength\itemsep{5pt}
+        \item Guarda \textbf{grandes volúmenes} de información de manera estructurada.
+        \item Permite \textbf{buscar, filtrar y cruzar} datos en milisegundos.
+        \item Es la \textbf{materia prima} de cualquier sistema de IA o Business Intelligence.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{conceptbox}{\faDatabase\enspace Definición}
+        \small
+        Sistema organizado para \textbf{almacenar, gestionar y recuperar} información de manera eficiente y confiable.
+      \end{conceptbox}
+      \vspace{0.3cm}
+      \begin{alertblock}{\faIndustry\enspace En la industria}
+        \small
+        Cada orden de compra, turno de producción, defecto registrado y cliente atendido \textbf{puede ser un dato} en una base de datos.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  2. TIPOS: SQL vs NoSQL
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Tipos de Bases de Datos}
+  \small
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\faTable\enspace SQL --- Bases de Datos Relacionales}
+        \small
+        \begin{itemize}\setlength\itemsep{4pt}
+          \item Datos organizados en \textbf{tablas} (filas y columnas).
+          \item Estructura \textbf{fija y predefinida}: todos los registros tienen los mismos campos.
+          \item Ideal cuando los datos son \textbf{ordenados y consistentes}.
+          \item Ejemplos: \tech{MySQL}, \tech{PostgreSQL}, \tech{SQL Server}.
+          \item Usos: inventarios, RRHH, contabilidad, ventas.
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\faCode\enspace NoSQL --- Bases de Datos No Relacionales}
+        \small
+        \begin{itemize}\setlength\itemsep{4pt}
+          \item Datos en \textbf{documentos, grafos o clave-valor}.
+          \item Estructura \textbf{flexible}: cada registro puede tener campos distintos.
+          \item Ideal para datos \textbf{variados o sin estructura definida}.
+          \item Ejemplos: \tech{MongoDB}, \tech{Firebase}, \tech{Redis}.
+          \item Usos: sensores IoT, redes sociales, logs de sistemas.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+  \vspace{0.2cm}
+  \begin{alertblock}{\faLightbulb\enspace Clave para recordar}
+    \centering\small
+    No hay una opción ``mejor''. La elección depende del \textbf{tipo de dato} y del \textbf{problema de negocio} que se quiera resolver.
+  \end{alertblock}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  3. MISMA INFO, DISTINTOS FORMATOS
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{La Misma Información, Distintos Formatos}
+  \small
+  \centering\textbf{¿Cómo se vería el registro de un empleado en cada tipo de base de datos?}
+  \vspace{0.25cm}
+  \begin{columns}[T]
+    \begin{column}{0.50\textwidth}
+      \begin{conceptbox}{\faTable\enspace SQL --- Tabla Relacional}
+        \centering
+        \vspace{4pt}
+        {\tiny
+        \begin{tabular}{|l|l|l|l|}
+          \hline
+          \textbf{id} & \textbf{nombre} & \textbf{cargo} & \textbf{turno} \\
+          \hline
+          1 & Ana López & Gerente & Mañana \\
+          2 & Juan Pérez & Operario & Tarde \\
+          3 & María Soto & Analista & Mañana \\
+          \hline
+        \end{tabular}
+        }
+        \vspace{4pt}
+        \par\tiny Cada fila es un registro. Todas las filas tienen exactamente las mismas columnas.
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.47\textwidth}
+      \begin{alertblock}{\faCode\enspace NoSQL --- Documento JSON}
+        {\small\ttfamily\selectfont
+          \textbf{\{}\\
+          \quad ``id'': 1,\\
+          \quad ``nombre'': ``Ana López'',\\
+          \quad ``cargo'': ``Gerente'',\\
+          \quad ``turno'': ``Mañana'',\\
+          \quad ``habilidades'': [``SAP'', ``Excel'']\\
+          \textbf{\}}
+        }
+      \end{alertblock}
+      \vspace{2pt}
+      \tiny Un campo como ``habilidades'' puede no existir en otros documentos. Eso es la flexibilidad de NoSQL.
+    \end{column}
+  \end{columns}
+  \vspace{0.2cm}
+  \begin{conceptbox}{\faArrowRight\enspace Diferencia clave}
+    \small
+    En SQL \textbf{todos los registros} tienen exactamente los mismos campos. En NoSQL cada documento puede tener campos \textbf{distintos y variables}.
+  \end{conceptbox}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  4. ¿CUÁNDO USAR CADA UNO?
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{¿Cuándo Usar Cada Tipo?}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\faTable\enspace Use SQL cuando\ldots}
+        \small
+        \begin{itemize}\setlength\itemsep{4pt}
+          \item Los datos tienen una \textbf{estructura estable} (siempre las mismas columnas).
+          \item Necesita cruzar información entre tablas (ej: órdenes con clientes).
+          \item La \textbf{integridad y consistencia} son críticas (contabilidad, RRHH, ERP).
+          \item El volumen de datos es \textbf{manejable} (millones de filas, no billones).
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\faCode\enspace Use NoSQL cuando\ldots}
+        \small
+        \begin{itemize}\setlength\itemsep{4pt}
+          \item Los datos son \textbf{heterogéneos} (cada registro puede ser distinto).
+          \item Necesita \textbf{escalar masivamente} (ej: millones de sensores IoT).
+          \item Los datos provienen de fuentes \textbf{no estructuradas} (texto, imágenes, logs).
+          \item La velocidad de \textbf{escritura} es más importante que la consistencia.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+  \vspace{0.2cm}
+  \begin{alertblock}{\faIndustry\enspace Contexto industrial típico}
+    \small\centering
+    Una planta de manufactura suele tener \textbf{SQL para RRHH e inventario} y \textbf{NoSQL para los sensores} de la línea de producción en tiempo real.
+  \end{alertblock}
+\end{frame}
+
+% =============================================================
+%  PARTE 2: CSV Y DATOS COMO ACTIVO
+% =============================================================
+
+% ─────────────────────────────────────────────────────────────
+%  5. EL CSV
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{El CSV: El ``Excel'' de las Máquinas}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \small
+      Un archivo \tech{.csv} (Comma-Separated Values) es una tabla de datos guardada como texto plano, donde cada valor está separado por una coma.
+
+      \vspace{0.3cm}
+      \begin{itemize}\setlength\itemsep{5pt}
+        \item \textbf{Ustedes lo conocen}: es como un Excel, pero sin fórmulas ni formatos de celda.
+        \item \textbf{Las máquinas lo aman}: cualquier lenguaje de programación lo lee de forma nativa.
+        \item \textbf{Es portable}: poco peso, se puede enviar por correo o subir a Colab.
+        \item \textbf{Es el estándar}: todas las herramientas de IA y Machine Learning lo aceptan.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{conceptbox}{\faFileCsv\enspace Así se ve un CSV (texto plano)}
+        {\small\ttfamily\selectfont
+          fecha,turno,maquina,producidas\\
+          2024-01-01,Mañana,A,145\\
+          2024-01-01,Tarde,B,132\\
+          2024-01-02,Mañana,A,138\\
+          2024-01-02,Noche,C,97
+        }
+      \end{conceptbox}
+      \vspace{0.2cm}
+      \begin{alertblock}{\faExclamationTriangle\enspace Ojo}
+        \small
+        Los CSV \textbf{no garantizan} que los datos estén limpios o correctos. Por eso existe la \textbf{limpieza de datos}.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  6. DATOS COMO ACTIVO EMPRESARIAL
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Los Datos como Activo Empresarial}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \small
+      En la economía digital, \textbf{los datos son tan valiosos como el capital físico}.
+      Pero solo generan valor si están \textbf{limpios, organizados y accesibles}.
+
+      \vspace{0.3cm}
+      \begin{itemize}\setlength\itemsep{5pt}
+        \item \textbf{Datos de producción} $\rightarrow$ Detectar cuellos de botella.
+        \item \textbf{Datos de clientes} $\rightarrow$ Predecir demanda y fidelizar.
+        \item \textbf{Datos de sensores} $\rightarrow$ Mantenimiento predictivo.
+        \item \textbf{Datos de calidad} $\rightarrow$ Reducir defectos y costos.
+      \end{itemize}
+
+      \vspace{0.3cm}
+      \textit{``El 80\,\% del tiempo en un proyecto de IA se destina a preparar los datos, no a entrenar modelos.''}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{conceptbox}{\faChartLine\enspace De dato a decisión}
+        \small
+        \textbf{Datos brutos} (\faDatabase)\\[4pt]
+        $\downarrow$ Limpieza y preparación\\[4pt]
+        \textbf{Datos limpios}\\[4pt]
+        $\downarrow$ Análisis + Modelo de IA\\[4pt]
+        \textbf{Insights accionables}\\[4pt]
+        $\downarrow$\\[4pt]
+        \textbf{Decisión de negocio} (\faChartBar)
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  7. IA SOBRE DATOS INDUSTRIALES
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{IA sobre Datos Industriales: Casos Reales}
+  \small
+  \begin{columns}[T]
+    \begin{column}{0.32\textwidth}
+      \begin{conceptbox}{\faCogs\enspace Mantenimiento Predictivo}
+        \small
+        Sensores capturan temperatura, vibración y presión. Un modelo de IA predice \textbf{cuándo fallará} una máquina antes de que ocurra.\\[4pt]
+        \textbf{Dato clave}: historial de fallas limpio y etiquetado correctamente.
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \begin{conceptbox}{\faCheckCircle\enspace Control de Calidad}
+        \small
+        Visión computacional analiza cada pieza en la línea de montaje para detectar \textbf{defectos en tiempo real}.\\[4pt]
+        \textbf{Dato clave}: historial de defectos con categorías precisas y sin valores faltantes.
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \begin{conceptbox}{\faBoxes\enspace Predicción de Demanda}
+        \small
+        Datos históricos de ventas y factores externos permiten predecir \textbf{cuánto producir} cada semana para no tener quiebres de stock.\\[4pt]
+        \textbf{Dato clave}: series de tiempo sin valores faltantes.
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+  \vspace{0.25cm}
+  \begin{alertblock}{\faExclamationTriangle\enspace El denominador común}
+    \centering\small
+    Todos estos casos \textbf{comienzan con datos limpios}. Sin esa base, los modelos producen resultados incorrectos --- ``\textit{basura entra, basura sale}''.
+  \end{alertblock}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  8. EL CICLO DEL DATO
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{El Ciclo del Dato en la Empresa}
+  \centering
+  \vspace{0.2cm}
+
+  \begin{tikzpicture}[
+      node distance=0.4cm and 0.5cm,
+      box/.style={rectangle, rounded corners=5pt, draw=mainColor, fill=bgLight,
+                  text width=2.1cm, align=center, font=\tiny\bfseries, minimum height=1.0cm},
+      highlight/.style={rectangle, rounded corners=5pt, draw=accentColor, fill=accentColor!15,
+                        text width=2.1cm, align=center, font=\tiny\bfseries, minimum height=1.0cm},
+      arr/.style={->, thick, color=mainColor, shorten >=2pt, shorten <=2pt}
+    ]
+    \node[box] (col) {\faDatabase\\[3pt]Recolección};
+    \node[box, right=of col] (alm) {\faServer\\[3pt]Almacenamiento};
+    \node[highlight, right=of alm] (limp) {\faEraser\\[3pt]\textcolor{accentColor}{Limpieza}};
+    \node[box, right=of limp] (anal) {\faChartBar\\[3pt]Análisis};
+    \node[box, right=of anal] (dec) {\faLightbulb\\[3pt]Decisión};
+
+    \draw[arr] (col) -- (alm);
+    \draw[arr] (alm) -- (limp);
+    \draw[arr] (limp) -- (anal);
+    \draw[arr] (anal) -- (dec);
+  \end{tikzpicture}
+
+  \vspace{0.35cm}
+  \begin{columns}[T]
+    \begin{column}{0.19\textwidth}
+      \tiny\centering Sensores, formularios, sistemas ERP, registros manuales
+    \end{column}
+    \begin{column}{0.19\textwidth}
+      \tiny\centering SQL, NoSQL, archivos CSV, Data Lake
+    \end{column}
+    \begin{column}{0.19\textwidth}
+      \tiny\centering\textbf{\textcolor{accentColor}{Hoy: tratar nulos, tipos incorrectos, errores de entrada}}
+    \end{column}
+    \begin{column}{0.19\textwidth}
+      \tiny\centering Estadística, visualización, modelos de ML
+    \end{column}
+    \begin{column}{0.19\textwidth}
+      \tiny\centering Reducir costos, mejorar calidad, predecir resultados
+    \end{column}
+  \end{columns}
+
+  \vspace{0.3cm}
+  \begin{alertblock}{\faArrowRight\enspace Hoy nos enfocamos en el paso más crítico y menos glamoroso}
+    \centering\small
+    \textbf{Sin limpieza, no hay análisis válido.}
+  \end{alertblock}
+\end{frame}
+
+% =============================================================
+%  PARTE 3: CASO PRÁCTICO
+% =============================================================
+
+% ─────────────────────────────────────────────────────────────
+%  9. NUESTRO CASO DE HOY
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Nuestro Caso de Hoy: Planta de Manufactura}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      \small
+      \textbf{Situación:} Somos analistas de datos de una planta industrial. El equipo de producción nos entrega un CSV con 200 registros diarios de manufactura.
+
+      \vspace{0.25cm}
+      \textbf{El problema:} los datos tienen errores reales que impiden usarlos directamente.
+
+      \vspace{0.25cm}
+      \textbf{Nuestro objetivo al finalizar:}
+      \begin{itemize}\setlength\itemsep{3pt}
+        \item Detectar y corregir los problemas de calidad del dataset.
+        \item Calcular la \textbf{tasa de defectos} por turno y máquina.
+        \item Identificar \textbf{qué turno y qué máquina} presentan más fallas.
+        \item Exportar un CSV limpio y gráficos listos para gerencia.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{conceptbox}{\faFileCsv\enspace Columnas del dataset}
+        {\small
+        \begin{tabular}{ll}
+          \tech{fecha} & Fecha del registro (texto)\\[2pt]
+          \tech{turno} & Mañana / Tarde / Noche\\[2pt]
+          \tech{maquina} & Máquina A, B, C o D\\[2pt]
+          \tech{tipo\_defecto} & Tipo de falla o \textit{nulo}\\[2pt]
+          \tech{unidades\_prod.} & Unidades fabricadas\\[2pt]
+          \tech{unidades\_def.} & Unidades con defecto\\[2pt]
+          \tech{operador} & Nombre del operador
+        \end{tabular}
+        }
+      \end{conceptbox}
+      \vspace{0.2cm}
+      \begin{alertblock}{\faExclamationTriangle\enspace Problemas en los datos}
+        \tiny
+        \begin{itemize}\setlength\itemsep{2pt}
+          \item Valores \textbf{nulos} en \texttt{tipo\_defecto} y \texttt{operador}
+          \item Fechas guardadas como \textbf{texto}, no como tipo fecha
+          \item Registros donde \textbf{defectuosas $>$ producidas} (error de ingreso)
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  10. HOJA DE RUTA DEL LABORATORIO
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Hoy en el Laboratorio: Hoja de Ruta}
+  \centering
+  \vspace{0.15cm}
+
+  \begin{tikzpicture}[
+      node distance=0.35cm and 0.2cm,
+      step/.style={rectangle, rounded corners=4pt, draw=mainColor, fill=bgLight,
+                   text width=2.0cm, align=center, font=\tiny\bfseries, minimum height=1.1cm},
+      arr/.style={->, thick, color=accentColor, shorten >=2pt, shorten <=2pt}
+    ]
+    \node[step] (s1) {\faDownload\\[3pt]1. Cargar\\datos};
+    \node[step, right=of s1] (s2) {\faSearch\\[3pt]2. Explorar};
+    \node[step, right=of s2] (s3) {\faEraser\\[3pt]3. Limpiar};
+    \node[step, right=of s3] (s4) {\faCalculator\\[3pt]4. Calcular\\métricas};
+    \node[step, right=of s4] (s5) {\faChartBar\\[3pt]5. Visualizar};
+    \node[step, right=of s5] (s6) {\faSave\\[3pt]6. Exportar\\CSV limpio};
+
+    \draw[arr] (s1) -- (s2);
+    \draw[arr] (s2) -- (s3);
+    \draw[arr] (s3) -- (s4);
+    \draw[arr] (s4) -- (s5);
+    \draw[arr] (s5) -- (s6);
+  \end{tikzpicture}
+
+  \vspace{0.35cm}
+  \begin{columns}[T]
+    \begin{column}{0.32\textwidth}
+      \begin{conceptbox}{\faPython\enspace Herramientas}
+        \tiny
+        \begin{itemize}\setlength\itemsep{2pt}
+          \item \tech{pandas} --- tablas y limpieza
+          \item \tech{numpy} --- cálculos numéricos
+          \item \tech{matplotlib} --- gráficos
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \begin{conceptbox}{\faFileAlt\enspace Entregable}
+        \tiny
+        \begin{itemize}\setlength\itemsep{2pt}
+          \item CSV limpio exportado
+          \item Gráfico de defectos por turno
+          \item Gráfico de tendencia en el tiempo
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \begin{alertblock}{\faLightbulb\enspace Decisión final}
+        \tiny
+        Al terminar, responderemos:\\[3pt]
+        \textbf{¿Qué turno y máquina debemos revisar con urgencia?}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.3cm}
+  \centering
+  \large\textcolor{mainColor}{\faArrowRight}\enspace
+  \textbf{\normalsize ¡Abran Google Colab!}
+\end{frame}
+
+\end{document}
