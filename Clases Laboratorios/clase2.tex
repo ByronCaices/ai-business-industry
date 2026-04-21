@@ -176,7 +176,7 @@
 \begin{frame}{La Misma Información, Distintos Formatos}
   \small
   \centering\textbf{¿Cómo se vería el registro de un empleado en cada tipo de base de datos?}
-  \vspace{0.25cm}
+  \vspace{0.1cm}
   \begin{columns}[T]
     \begin{column}{0.50\textwidth}
       \begin{conceptbox}{\faTable\enspace SQL --- Tabla Relacional}
@@ -199,7 +199,7 @@
     \end{column}
     \begin{column}{0.47\textwidth}
       \begin{alertblock}{\faCode\enspace NoSQL --- Documento JSON}
-        {\small\ttfamily\selectfont
+        {\footnotesize\ttfamily\selectfont
           \textbf{\{}\\
           \quad ``id'': 1,\\
           \quad ``nombre'': ``Ana López'',\\
@@ -209,11 +209,10 @@
           \textbf{\}}
         }
       \end{alertblock}
-      \vspace{2pt}
       \tiny Un campo como ``habilidades'' puede no existir en otros documentos. Eso es la flexibilidad de NoSQL.
     \end{column}
   \end{columns}
-  \vspace{0.2cm}
+  \vspace{0.1cm}
   \begin{conceptbox}{\faArrowRight\enspace Diferencia clave}
     \small
     En SQL \textbf{todos los registros} tienen exactamente los mismos campos. En NoSQL cada documento puede tener campos \textbf{distintos y variables}.
@@ -228,7 +227,7 @@
     \begin{column}{0.48\textwidth}
       \begin{block}{\faTable\enspace Use SQL cuando\ldots}
         \small
-        \begin{itemize}\setlength\itemsep{4pt}
+        \begin{itemize}\setlength\itemsep{2pt}
           \item Los datos tienen una \textbf{estructura estable} (siempre las mismas columnas).
           \item Necesita cruzar información entre tablas (ej: órdenes con clientes).
           \item La \textbf{integridad y consistencia} son críticas (contabilidad, RRHH, ERP).
@@ -239,7 +238,7 @@
     \begin{column}{0.48\textwidth}
       \begin{block}{\faCode\enspace Use NoSQL cuando\ldots}
         \small
-        \begin{itemize}\setlength\itemsep{4pt}
+        \begin{itemize}\setlength\itemsep{2pt}
           \item Los datos son \textbf{heterogéneos} (cada registro puede ser distinto).
           \item Necesita \textbf{escalar masivamente} (ej: millones de sensores IoT).
           \item Los datos provienen de fuentes \textbf{no estructuradas} (texto, imágenes, logs).
@@ -248,7 +247,7 @@
       \end{block}
     \end{column}
   \end{columns}
-  \vspace{0.2cm}
+  \vspace{0.1cm}
   \begin{alertblock}{\faIndustry\enspace Contexto industrial típico}
     \small\centering
     Una planta de manufactura suele tener \textbf{SQL para RRHH e inventario} y \textbf{NoSQL para los sensores} de la línea de producción en tiempo real.
@@ -305,26 +304,26 @@
       En la economía digital, \textbf{los datos son tan valiosos como el capital físico}.
       Pero solo generan valor si están \textbf{limpios, organizados y accesibles}.
 
-      \vspace{0.3cm}
-      \begin{itemize}\setlength\itemsep{5pt}
+      \vspace{0.15cm}
+      \begin{itemize}\setlength\itemsep{3pt}
         \item \textbf{Datos de producción} $\rightarrow$ Detectar cuellos de botella.
         \item \textbf{Datos de clientes} $\rightarrow$ Predecir demanda y fidelizar.
         \item \textbf{Datos de sensores} $\rightarrow$ Mantenimiento predictivo.
         \item \textbf{Datos de calidad} $\rightarrow$ Reducir defectos y costos.
       \end{itemize}
 
-      \vspace{0.3cm}
+      \vspace{0.15cm}
       \textit{``El 80\,\% del tiempo en un proyecto de IA se destina a preparar los datos, no a entrenar modelos.''}
     \end{column}
     \begin{column}{0.42\textwidth}
       \begin{conceptbox}{\faChartLine\enspace De dato a decisión}
         \small
-        \textbf{Datos brutos} (\faDatabase)\\[4pt]
-        $\downarrow$ Limpieza y preparación\\[4pt]
-        \textbf{Datos limpios}\\[4pt]
-        $\downarrow$ Análisis + Modelo de IA\\[4pt]
-        \textbf{Insights accionables}\\[4pt]
-        $\downarrow$\\[4pt]
+        \textbf{Datos brutos} (\faDatabase)\\[2pt]
+        $\downarrow$ Limpieza y preparación\\[2pt]
+        \textbf{Datos limpios}\\[2pt]
+        $\downarrow$ Análisis + Modelo de IA\\[2pt]
+        \textbf{Insights accionables}\\[2pt]
+        $\downarrow$\\[2pt]
         \textbf{Decisión de negocio} (\faChartBar)
       \end{conceptbox}
     \end{column}
@@ -424,47 +423,68 @@
 % =============================================================
 
 % ─────────────────────────────────────────────────────────────
-%  9. NUESTRO CASO DE HOY
+%  9a. NUESTRO CASO DE HOY — SITUACIÓN
 % ─────────────────────────────────────────────────────────────
 \begin{frame}{Nuestro Caso de Hoy: Planta de Manufactura}
   \begin{columns}[T]
-    \begin{column}{0.52\textwidth}
+    \begin{column}{0.55\textwidth}
       \small
-      \textbf{Situación:} Somos analistas de datos de una planta industrial. El equipo de producción nos entrega un CSV con 200 registros diarios de manufactura.
+      \textbf{Situación:} Somos analistas de una planta industrial. El equipo de calidad nos entrega un CSV con \textbf{1.000 registros} de defectos de manufactura extraídos de datos reales de Kaggle.
 
-      \vspace{0.25cm}
-      \textbf{El problema:} los datos tienen errores reales que impiden usarlos directamente.
+      \vspace{0.12cm}
+      \textbf{El problema:} los datos tienen errores que impiden usarlos directamente.
 
-      \vspace{0.25cm}
-      \textbf{Nuestro objetivo al finalizar:}
-      \begin{itemize}\setlength\itemsep{3pt}
+      \vspace{0.12cm}
+      \textbf{Nuestro objetivo:}
+      \begin{itemize}\setlength\itemsep{2pt}
         \item Detectar y corregir los problemas de calidad del dataset.
-        \item Calcular la \textbf{tasa de defectos} por turno y máquina.
-        \item Identificar \textbf{qué turno y qué máquina} presentan más fallas.
-        \item Exportar un CSV limpio y gráficos listos para gerencia.
+        \item Calcular el \textbf{costo promedio de reparación} por tipo y severidad.
+        \item Identificar \textbf{qué tipo de defecto es más costoso} y qué método de inspección lo detecta mejor.
+        \item Exportar un CSV limpio y gráficos para gerencia.
       \end{itemize}
     \end{column}
-    \begin{column}{0.45\textwidth}
-      \begin{conceptbox}{\faFileCsv\enspace Columnas del dataset}
-        {\small
-        \begin{tabular}{ll}
-          \tech{fecha} & Fecha del registro (texto)\\[2pt]
-          \tech{turno} & Mañana / Tarde / Noche\\[2pt]
-          \tech{maquina} & Máquina A, B, C o D\\[2pt]
-          \tech{tipo\_defecto} & Tipo de falla o \textit{nulo}\\[2pt]
-          \tech{unidades\_prod.} & Unidades fabricadas\\[2pt]
-          \tech{unidades\_def.} & Unidades con defecto\\[2pt]
-          \tech{operador} & Nombre del operador
-        \end{tabular}
-        }
+    \begin{column}{0.42\textwidth}
+      \begin{alertblock}{\faIndustry\enspace Contexto}
+        \small
+        Un sistema real de control de calidad genera \textbf{miles de registros}: tipos de defecto, severidad, métodos de inspección, costos. Sin limpieza, este volumen es \textbf{inutilizable} para la IA.
+      \end{alertblock}
+      \vspace{0.15cm}
+      \begin{conceptbox}{\faLightbulb\enspace Pregunta de negocio}
+        \small
+        Al finalizar responderemos:\\[4pt]
+        \textbf{¿Qué tipo de defecto genera mayor costo de reparación y qué método de inspección lo detecta mejor?}
       \end{conceptbox}
-      \vspace{0.2cm}
-      \begin{alertblock}{\faExclamationTriangle\enspace Problemas en los datos}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  9b. NUESTRO CASO DE HOY — DATASET
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{El Dataset: Columnas y Problemas de Calidad}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      \begin{conceptbox}{\faFileCsv\enspace Columnas del dataset (Kaggle)}
         \tiny
-        \begin{itemize}\setlength\itemsep{2pt}
-          \item Valores \textbf{nulos} en \texttt{tipo\_defecto} y \texttt{operador}
-          \item Fechas guardadas como \textbf{texto}, no como tipo fecha
-          \item Registros donde \textbf{defectuosas $>$ producidas} (error de ingreso)
+        \begin{tabular}{ll}
+          \tech{defect\_id} & ID único del defecto\\[3pt]
+          \tech{product\_id} & ID del producto afectado\\[3pt]
+          \tech{defect\_type} & Structural / Functional / Cosmetic\\[3pt]
+          \tech{defect\_date} & Fecha de detección (\textit{texto})\\[3pt]
+          \tech{defect\_location} & Surface / Component / Internal\\[3pt]
+          \tech{severity} & Minor / Moderate / Critical o \textit{nulo}\\[3pt]
+          \tech{inspection\_method} & Visual / Automated / Manual o \textit{nulo}\\[3pt]
+          \tech{repair\_cost} & Costo de reparación (algunos \textit{negativos})
+        \end{tabular}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \begin{alertblock}{\faExclamationTriangle\enspace Problemas detectados en los datos}
+        \small
+        \begin{itemize}\setlength\itemsep{6pt}
+          \item Valores \textbf{nulos} en \texttt{severity} (\textasciitilde10\%) e \texttt{inspection\_method} (\textasciitilde8\%)
+          \item \texttt{defect\_date} guardada como \textbf{texto}, no como tipo fecha
+          \item \texttt{repair\_cost} con valores \textbf{negativos} (\textasciitilde3\%) --- error de ingreso
         \end{itemize}
       \end{alertblock}
     \end{column}
@@ -498,36 +518,35 @@
     \draw[arr] (s5) -- (s6);
   \end{tikzpicture}
 
-  \vspace{0.35cm}
+  \vspace{0.25cm}
   \begin{columns}[T]
-    \begin{column}{0.32\textwidth}
+    \begin{column}{0.48\textwidth}
       \begin{conceptbox}{\faPython\enspace Herramientas}
-        \tiny
-        \begin{itemize}\setlength\itemsep{2pt}
+        \small
+        \begin{itemize}\setlength\itemsep{4pt}
           \item \tech{pandas} --- tablas y limpieza
           \item \tech{numpy} --- cálculos numéricos
           \item \tech{matplotlib} --- gráficos
         \end{itemize}
       \end{conceptbox}
     \end{column}
-    \begin{column}{0.32\textwidth}
+    \begin{column}{0.48\textwidth}
       \begin{conceptbox}{\faFileAlt\enspace Entregable}
-        \tiny
-        \begin{itemize}\setlength\itemsep{2pt}
+        \small
+        \begin{itemize}\setlength\itemsep{4pt}
           \item CSV limpio exportado
           \item Gráfico de defectos por turno
           \item Gráfico de tendencia en el tiempo
         \end{itemize}
       \end{conceptbox}
     \end{column}
-    \begin{column}{0.32\textwidth}
-      \begin{alertblock}{\faLightbulb\enspace Decisión final}
-        \tiny
-        Al terminar, responderemos:\\[3pt]
-        \textbf{¿Qué turno y máquina debemos revisar con urgencia?}
-      \end{alertblock}
-    \end{column}
   \end{columns}
+
+  \vspace{0.2cm}
+  \begin{alertblock}{\faLightbulb\enspace Decisión final}
+    \centering\small
+    Al terminar, responderemos: \textbf{¿Qué turno y máquina debemos revisar con urgencia?}
+  \end{alertblock}
 
   \vspace{0.3cm}
   \centering
