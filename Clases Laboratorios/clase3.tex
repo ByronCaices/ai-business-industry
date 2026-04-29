@@ -1,0 +1,700 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{metropolis}
+
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, babel}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\usepackage{fontawesome5}
+\usepackage{amsmath}
+
+% ─────────────────────────────────────────────────────────────
+%  PALETA
+% ─────────────────────────────────────────────────────────────
+\definecolor{mainColor}{HTML}{00a499}
+\definecolor{accentColor}{HTML}{EA7600}
+\definecolor{bgLight}{HTML}{E6F7F6}
+\definecolor{codeGray}{HTML}{2B2B2B}
+
+% ─────────────────────────────────────────────────────────────
+%  METROPOLIS
+% ─────────────────────────────────────────────────────────────
+\setbeamercolor{normal text}{fg=codeGray, bg=white}
+\setbeamercolor{frametitle}{bg=mainColor, fg=white}
+\setbeamercolor{alerted text}{fg=accentColor}
+\setbeamercolor{progress bar}{fg=accentColor, bg=mainColor!25}
+\setbeamercolor{block title}{bg=mainColor, fg=white}
+\setbeamercolor{block body}{bg=bgLight, fg=codeGray}
+\setbeamercolor{block title alerted}{bg=accentColor, fg=white}
+\setbeamercolor{block body alerted}{bg=accentColor!10, fg=codeGray}
+\metroset{progressbar=frametitle, sectionpage=none, numbering=fraction}
+\usepackage{hyperref}
+
+% ─────────────────────────────────────────────────────────────
+%  CAJA DE CONCEPTO
+% ─────────────────────────────────────────────────────────────
+\newtcolorbox{conceptbox}[1]{
+  colback=bgLight, colframe=mainColor,
+  title={\small #1}, fonttitle=\bfseries,
+  coltitle=white, colbacktitle=mainColor,
+  arc=4pt, boxrule=0.6pt,
+  left=4pt, right=4pt, top=2pt, bottom=2pt
+}
+
+\newcommand{\tech}[1]{\texttt{\textcolor{mainColor}{#1}}}
+
+\hypersetup{colorlinks=true, urlcolor=mainColor}
+
+% ─────────────────────────────────────────────────────────────
+%  PORTADA
+% ─────────────────────────────────────────────────────────────
+\title{Modelos de Inteligencia Artificial en Negocios\\{\normalsize |}\\ Inteligencia Artificial Aplicada a la Industria\\{\tiny Clase 3: Datos para Entrenamiento}}
+\subtitle{{\small Semestre 1, 2026 · Universidad de Santiago de Chile}}
+\author{\href{https://www.linkedin.com/in/byron-caices/}{Byron Caices Lima} \\ \small Departamento de Ingeniería Industrial}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+% =============================================================
+%  AGENDA
+% =============================================================
+
+\begin{frame}{¿Qué Veremos Hoy?}
+  \small
+  \begin{columns}[T]
+    \begin{column}{0.32\textwidth}
+      \begin{conceptbox}{\faBrain\enspace Parte 1}
+        \small
+        \textbf{¿Qué es un modelo de IA?}\\[4pt]
+        La idea de \textit{aprender con ejemplos} y por qué los datos son su materia prima.
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \begin{conceptbox}{\faTable\enspace Parte 2}
+        \small
+        \textbf{Tipos de datos}\\[4pt]
+        Tabulares vs. no estructurados. Por qué la IA siempre los \textbf{traduce a números}.
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \begin{conceptbox}{\faFlask\enspace Parte 3}
+        \small
+        \textbf{Laboratorio}\\[4pt]
+        Preparar nuestro CSV limpio para que una futura IA pueda aprender de él.
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+  \vspace{0.3cm}
+  \begin{alertblock}{\faLightbulb\enspace Objetivo de la sesión}
+    \centering\small
+    Entender que \textbf{datos limpios todavía no son suficientes} --- y aprender a transformarlos para que la IA pueda usarlos.
+  \end{alertblock}
+\end{frame}
+
+% =============================================================
+%  PUENTE CLASE 2
+% =============================================================
+
+\begin{frame}{¿Dónde Quedamos en la Clase 2?}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \small
+      Recibimos un CSV \textbf{sucio} de defectos de manufactura y lo limpiamos:
+      \vspace{0.15cm}
+      \begin{itemize}\setlength\itemsep{4pt}
+        \item Convertimos \tech{defect\_date} de texto a fecha real.
+        \item Rellenamos los nulos en \tech{severity} e \tech{inspection\_method}.
+        \item Eliminamos las filas con \tech{repair\_cost} negativo.
+      \end{itemize}
+
+      \vspace{0.3cm}
+      \textbf{Pregunta:} ¿podemos usar ese CSV directamente para que una IA aprenda de él?
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{alertblock}{\faExclamationTriangle\enspace Aún no}
+        \small
+        Los datos limpios todavía contienen:
+        \begin{itemize}\setlength\itemsep{2pt}
+          \item Categorías como ``Structural'' o ``Visual'' (\textbf{texto, no números})
+          \item Columnas con escalas muy distintas
+          \item Un solo bloque de datos sin separar
+        \end{itemize}
+      \end{alertblock}
+      \vspace{0.15cm}
+      \begin{conceptbox}{\faArrowRight\enspace Hoy}
+        \small\centering
+        Aprendemos a \textbf{transformar} los datos para que la IA pueda procesarlos.
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =============================================================
+%  PARTE 1: ¿QUÉ ES IA / ML?
+% =============================================================
+
+% ─────────────────────────────────────────────────────────────
+%  ¿QUÉ ES ML?
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Antes de Empezar: ¿Qué es Machine Learning?}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \small
+      Cuando hablamos de IA aplicada a la industria, en la mayoría de los casos nos referimos a \textbf{Machine Learning (ML)} --- ``aprendizaje automático''.
+
+      \vspace{0.2cm}
+      \begin{conceptbox}{\faLightbulb\enspace La idea central}
+        \small
+        Un programa tradicional sigue \textbf{reglas escritas a mano}.\\[4pt]
+        Un modelo de Machine Learning \textbf{descubre las reglas por sí mismo} a partir de muchos ejemplos.
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{block}{\faCode\enspace Programa tradicional}
+        \tiny\ttfamily
+        si costo $>$ 500:\\
+        \quad marcar como ``caro''\\
+        si\_no:\\
+        \quad marcar como ``barato''
+      \end{block}
+      \vspace{0.1cm}
+      \begin{alertblock}{\faRobot\enspace Modelo de ML}
+        \small
+        ``Aquí tienes 1000 defectos pasados con su costo real. \textbf{Aprende tú} qué características hacen que un defecto sea caro.''
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+  \vspace{0.2cm}
+  \begin{conceptbox}{\faBookOpen\enspace La analogía clave}
+    \centering\small
+    Los datos son a la IA \textbf{lo que los libros de texto son a un estudiante}.\\
+    Si el material está desordenado o lleno de errores, el estudiante no aprende bien.
+  \end{conceptbox}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  EJEMPLO HUMANO -> MODELO
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Aprender con Ejemplos: La Idea de ``Entrenar''}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \small
+      Cuando un humano aprende a reconocer una manzana, no lee un manual: ve \textbf{muchas manzanas} y poco a poco capta los patrones.
+
+      \vspace{0.2cm}
+      Un modelo de IA hace algo similar: necesita \textbf{muchos ejemplos} del fenómeno que queremos que aprenda.
+
+      \vspace{0.2cm}
+      Cada ejemplo tiene dos partes:
+      \begin{itemize}\setlength\itemsep{3pt}
+        \item \textbf{Características}: la información que describe el caso.
+        \item \textbf{Resultado}: lo que pasó realmente.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \begin{conceptbox}{\faIndustry\enspace En nuestro caso}
+        \small
+        \textbf{Características de cada defecto:}\\[2pt]
+        \tech{defect\_type}, \tech{defect\_location}, \tech{severity}, \tech{inspection\_method}\\[8pt]
+        \textbf{Resultado correspondiente:}\\[2pt]
+        \tech{repair\_cost} (cuánto costó realmente repararlo)
+      \end{conceptbox}
+      \vspace{0.15cm}
+      \begin{alertblock}{\faLightbulb\enspace La meta}
+        \small
+        Si le mostramos miles de ejemplos, el modelo aprende: \textit{``cuando un defecto es Estructural y crítico, el costo suele ser alto''}.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  VOCABULARIO X / y
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Vocabulario que Vamos a Usar}
+  \small
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\faList\enspace Las características --- ``X''}
+        \small
+        \begin{itemize}\setlength\itemsep{3pt}
+          \item Las columnas que el modelo usa como \textbf{pistas}.
+          \item Se escribe en \textbf{mayúscula} porque suele ser una matriz (varias columnas).
+          \item También se llaman \textbf{features} (en inglés).
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\faBullseye\enspace El objetivo --- ``y''}
+        \small
+        \begin{itemize}\setlength\itemsep{3pt}
+          \item La columna que el modelo intenta \textbf{adivinar}.
+          \item Se escribe en \textbf{minúscula} porque es una sola columna.
+          \item También se llama \textbf{target} (en inglés).
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+  \vspace{0.25cm}
+  \begin{conceptbox}{\faArrowRight\enspace La meta del modelo}
+    \centering\small
+    Aprender la relación: \textbf{X $\rightarrow$ y}\\[3pt]
+    \textit{``Dadas estas características, ¿cuál sería el resultado?''}
+  \end{conceptbox}
+\end{frame}
+
+% =============================================================
+%  PARTE 2: TIPOS DE DATOS
+% =============================================================
+
+% ─────────────────────────────────────────────────────────────
+%  TABULARES VS NO ESTRUCTURADOS
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Datos Tabulares vs. Datos No Estructurados}
+  \small
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\faTable\enspace Datos Tabulares}
+        \small
+        Filas y columnas, como una tabla de Excel.
+        \vspace{4pt}
+        \begin{itemize}\setlength\itemsep{2pt}
+          \item Cada columna tiene un significado claro.
+          \item Formato: CSV, Excel, base SQL.
+        \end{itemize}
+        \vspace{4pt}
+        \textbf{Ejemplos en industria:}
+        \begin{itemize}\setlength\itemsep{1pt}
+          \item Registros de defectos \checkmark
+          \item Ventas mensuales
+          \item Lecturas de sensores
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\faImages\enspace Datos No Estructurados}
+        \small
+        No caben en una tabla. Cada ``unidad'' es un archivo complejo.
+        \vspace{4pt}
+        \begin{itemize}\setlength\itemsep{2pt}
+          \item Difíciles de procesar directamente.
+          \item Formato: imagen, audio, video, texto libre.
+        \end{itemize}
+        \vspace{4pt}
+        \textbf{Ejemplos en industria:}
+        \begin{itemize}\setlength\itemsep{1pt}
+          \item Fotos de productos defectuosos
+          \item Audio de máquinas
+          \item Reclamos de clientes
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+  \vspace{0.2cm}
+  \begin{alertblock}{\faLightbulb\enspace La regla universal de la IA}
+    \centering\small
+    Cualquiera sea el tipo de dato, el modelo lo recibe \textbf{como una matriz de números}.\\
+    Las imágenes, el texto y las tablas: \textbf{todo se traduce a números} antes de entrar al modelo.
+  \end{alertblock}
+\end{frame}
+
+% =============================================================
+%  PARTE 3: TRANSFORMACIONES
+% =============================================================
+
+% ─────────────────────────────────────────────────────────────
+%  PROBLEMA 1: TEXTO → NÚMEROS
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Problema 1: Las Máquinas No Entienden Palabras}
+  \small
+  La primera fila de nuestro dataset se ve más o menos así:
+
+  \vspace{0.2cm}
+  \centering
+  {\footnotesize
+  \begin{tabular}{|l|l|l|l|}
+    \hline
+    \textbf{defect\_type} & \textbf{defect\_location} & \textbf{severity} & \textbf{inspection\_method} \\\hline
+    Structural & Surface & Critical & Visual \\\hline
+  \end{tabular}}
+
+  \vspace{0.3cm}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\faExclamationTriangle\enspace El problema}
+        \small
+        Un modelo de IA solo trabaja con \textbf{números}. La palabra ``Critical'' no significa nada para él.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{conceptbox}{\faCogs\enspace La solución}
+        \small
+        Traducir cada categoría a un número, sin inventar un orden falso entre ellas.\\[3pt]
+        Técnica estándar: \textbf{One-Hot Encoding}.
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  ONE-HOT ENCODING EXPLICADO
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{One-Hot Encoding: Una Columna por Categoría}
+  \small
+  La idea es simple: por cada categoría posible creamos una nueva columna que vale \textbf{1 si la fila pertenece a esa categoría, 0 si no}.
+
+  \vspace{0.25cm}
+  \centering
+  {\footnotesize
+  \begin{tabular}{|c||c|c|c|}
+    \hline
+    \textbf{defect\_type} & \textbf{Structural} & \textbf{Functional} & \textbf{Cosmetic} \\\hline\hline
+    Structural & \textbf{1} & 0 & 0 \\\hline
+    Functional & 0 & \textbf{1} & 0 \\\hline
+    Cosmetic & 0 & 0 & \textbf{1} \\\hline
+  \end{tabular}}
+
+  \vspace{0.3cm}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\faTimesCircle\enspace ¿Por qué no asignar 1, 2, 3?}
+        \small
+        Si decimos \textit{Structural=1, Functional=2, Cosmetic=3}, el modelo cree que \textbf{Cosmetic $>$ Functional $>$ Structural}.\\[3pt]
+        Eso es un \textbf{orden falso}: son categorías sin ranking.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{conceptbox}{\faPython\enspace En Python: 1 línea}
+        \small
+        \tech{pd.get\_dummies(X)}\\[4pt]
+        Pandas detecta las columnas de texto y aplica One-Hot Encoding automáticamente.
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  EJEMPLO PASO A PASO: ONE-HOT ENCODING
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Ejemplo Paso a Paso: One-Hot Encoding en Nuestro Dataset}
+  \small
+  \textbf{Partamos con 3 defectos reales de nuestro dataset:}
+  \vspace{0.2cm}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{ANTES (con categorías de texto):}
+      \vspace{4pt}
+      \par{\footnotesize
+      \begin{tabular}{|l|l|}
+        \hline
+        \textbf{defect\_type} & \textbf{severity} \\\hline
+        Structural & Minor \\
+        Cosmetic & Critical \\
+        Functional & Moderate \\\hline
+      \end{tabular}}
+
+      \vspace{0.3cm}
+      \small Las máquinas no entienden ``Structural'' ni ``Critical''.
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{DESPUÉS (solo números 0 y 1):}
+      \vspace{4pt}
+      \par{\tiny
+      \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        \textbf{Struct} & \textbf{Funct} & \textbf{Cosm} & \textbf{Minor} & \textbf{Crit} & \textbf{Mod} \\\hline
+        1 & 0 & 0 & 1 & 0 & 0 \\
+        0 & 0 & 1 & 0 & 1 & 0 \\
+        0 & 1 & 0 & 0 & 0 & 1 \\\hline
+      \end{tabular}}
+
+      \vspace{0.15cm}
+      \small Las máquinas entienden perfectamente los 0s y 1s.
+    \end{column}
+  \end{columns}
+
+  \vspace{0.3cm}
+  \begin{alertblock}{\faLightbulb\enspace La lógica del 0 y 1}
+    \centering\small
+    Para cada fila: \textbf{exactamente una columna vale 1}, el resto valen 0.\\
+    ¿Por qué? Porque cada defecto \textbf{es una sola cosa a la vez}.\\
+    No puede ser Structural Y Cosmetic simultáneamente.
+  \end{alertblock}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  ¿POR QUÉ NO ASIGNAR 1, 2, 3 DIRECTAMENTE?
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{¿Por Qué No Simplemente Asignar 1, 2, 3?}
+  \small
+  \textbf{Propuesta tentadora:} asignar Structural=1, Functional=2, Cosmetic=3.
+  \vspace{0.2cm}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\faTimesCircle\enspace ¿Cuál es el problema?}
+        \small
+        El modelo interpretaría estos números como una \textbf{escala real}:\\[4pt]
+        ``Cosmetic (3) es MÁS que Functional (2),\\
+        y Functional (2) es MÁS que Structural (1).''\\[4pt]
+        \textbf{Pero eso es falso.} Son solo categorías distintas, sin jerarquía.
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\faCheckCircle\enspace La solución: One-Hot}
+        \small
+        Con One-Hot, cada categoría es \textbf{independiente}:
+        \vspace{4pt}
+        \par{\tiny
+        \begin{tabular}{|c|c|c|}
+          \hline
+          \textbf{S} & \textbf{F} & \textbf{C} \\\hline
+          1 & 0 & 0 \\
+          0 & 1 & 0 \\
+          0 & 0 & 1 \\\hline
+        \end{tabular}}
+
+        \vspace{2pt}
+        \par No hay orden. El modelo no puede confundir ``3 es mayor que 1''.
+      \end{block}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  \begin{conceptbox}{\faKey\enspace Regla general}
+    \centering\small
+    \textbf{Siempre} que tengas categorías sin un orden natural → usa One-Hot Encoding.
+  \end{conceptbox}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  PROBLEMA 2: ESCALADO
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Problema 2: Cuando los Números Viven en Escalas Distintas}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \small
+      Imaginen un dataset con dos columnas:
+      \vspace{0.15cm}
+      \begin{itemize}\setlength\itemsep{2pt}
+        \item \tech{edad\_maquina} $\rightarrow$ entre 1 y 30 (años)
+        \item \tech{horas\_uso\_total} $\rightarrow$ entre 0 y 50.000 (horas)
+      \end{itemize}
+
+      \vspace{0.25cm}
+      Para muchos modelos, la columna con \textbf{números más grandes pesa más} en sus decisiones --- aunque las dos variables sean igualmente importantes.
+
+      \vspace{0.2cm}
+      \textit{Es como medir personas en metros y árboles en kilómetros: el árbol parece insignificante \textbf{solo por la unidad}.}
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \begin{conceptbox}{\faRulerCombined\enspace La solución: escalar}
+        \small
+        Llevar todas las columnas numéricas a un \textbf{rango común}, por ejemplo entre 0 y 1.
+        \vspace{4pt}
+        \par\textbf{Min-Max Scaling:}
+        \[ x' = \frac{x - \min}{\max - \min} \]
+        Después, todos los valores quedan entre 0 y 1, sin importar la escala original.
+      \end{conceptbox}
+      \vspace{0.1cm}
+      \begin{alertblock}{\faPython\enspace En sklearn}
+        \small\centering
+        \tech{MinMaxScaler()}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  PROBLEMA 3: ENTRENAR vs EVALUAR
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Problema 3: ¿Cómo Saber si el Modelo Realmente Aprendió?}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \small
+      Imaginen que un profesor enseña matemáticas con \textbf{100 ejercicios resueltos}, y luego evalúa al alumno con \textbf{esos mismos 100 ejercicios}.
+
+      \vspace{0.2cm}
+      ¿Aprendió de verdad o solo \textbf{memorizó las respuestas}?
+
+      \vspace{0.3cm}
+      Lo mismo pasa con los modelos de IA:
+      \vspace{0.1cm}
+      \begin{itemize}\setlength\itemsep{3pt}
+        \item Si los entrenamos con \textbf{todos los datos}\ldots
+        \item \ldots y luego los evaluamos con \textbf{esos mismos datos}\ldots
+        \item \ldots no sabremos si el modelo aprendió patrones reales.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{conceptbox}{\faCut\enspace La solución}
+        \small
+        Separar los datos \textbf{antes de entrenar} en dos grupos:
+        \vspace{4pt}
+        \begin{itemize}\setlength\itemsep{2pt}
+          \item \textbf{Entrenamiento (~80\%)}: el modelo estudia con ellos.
+          \item \textbf{Prueba (~20\%)}: nunca los ve durante el aprendizaje. Sirven para evaluarlo después.
+        \end{itemize}
+      \end{conceptbox}
+      \vspace{0.1cm}
+      \begin{alertblock}{\faPython\enspace En sklearn}
+        \small\centering
+        \tech{train\_test\_split(X, y, test\_size=0.2)}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  VISUAL DEL SPLIT
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Visualización del Split}
+  \centering
+  \vspace{0.3cm}
+
+  \begin{tikzpicture}
+    \fill[mainColor!75] (0,0) rectangle (10,1.2);
+    \fill[accentColor!75] (10,0) rectangle (12.5,1.2);
+    \draw[thick] (0,0) rectangle (12.5,1.2);
+    \node[white, font=\large\bfseries] at (5,0.6) {ENTRENAMIENTO --- 80\%};
+    \node[white, font=\large\bfseries] at (11.25,0.6) {PRUEBA --- 20\%};
+
+    \node[font=\small] at (5,-0.4) {El modelo aprende aquí};
+    \node[font=\small] at (11.25,-0.4) {Evaluamos al final};
+  \end{tikzpicture}
+
+  \vspace{0.8cm}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{conceptbox}{\faGraduationCap\enspace Datos de entrenamiento}
+        \small
+        Son los \textbf{ejemplos resueltos} que le mostramos al modelo. Aquí el modelo descubre patrones.
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{\faClipboardCheck\enspace Datos de prueba}
+        \small
+        Son el \textbf{examen}. El modelo nunca los vio antes. Si responde bien acá, podemos confiar en él.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =============================================================
+%  PARTE 4: CASO HOY
+% =============================================================
+
+% ─────────────────────────────────────────────────────────────
+%  NUESTRO CASO HOY
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Nuestro Caso de Hoy}
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \small
+      \textbf{Situación:} Seguimos en la planta industrial. Los datos limpios de la Clase 2 nos dejan en condiciones de plantear una idea:
+
+      \vspace{0.15cm}
+      \textit{``¿Y si más adelante construimos una IA que estime el costo de reparación de un defecto futuro a partir de sus características?''}
+
+      \vspace{0.2cm}
+      \textbf{Hoy NO entrenaremos el modelo todavía.} Hoy preparamos los datos para que esa próxima etapa sea posible.
+
+      \vspace{0.2cm}
+      \textbf{Variables del problema:}
+      \begin{itemize}\setlength\itemsep{2pt}
+        \item Características (X): tipo, ubicación, severidad, método de inspección
+        \item Objetivo (y): \tech{repair\_cost}
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{conceptbox}{\faFileExport\enspace Entregable de la clase}
+        \small
+        Cuatro archivos CSV listos para entrenamiento:
+        \vspace{4pt}
+        \begin{itemize}\setlength\itemsep{2pt}
+          \item \tech{X\_train.csv}
+          \item \tech{y\_train.csv}
+          \item \tech{X\_test.csv}
+          \item \tech{y\_test.csv}
+        \end{itemize}
+      \end{conceptbox}
+      \vspace{0.15cm}
+      \begin{alertblock}{\faIndustry\enspace ¿Por qué este paso es crítico?}
+        \small\centering
+        Sin esta preparación, los algoritmos de la próxima unidad \textbf{simplemente no funcionarían}.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ─────────────────────────────────────────────────────────────
+%  HOJA DE RUTA DEL LABORATORIO
+% ─────────────────────────────────────────────────────────────
+\begin{frame}{Hoy en el Laboratorio: Hoja de Ruta}
+  \centering
+  \vspace{0.15cm}
+
+  \begin{tikzpicture}[
+      node distance=0.30cm and 0.18cm,
+      step/.style={rectangle, rounded corners=4pt, draw=mainColor, fill=bgLight,
+                   text width=2.0cm, align=center, font=\tiny\bfseries, minimum height=1.1cm},
+      arr/.style={->, thick, color=accentColor, shorten >=2pt, shorten <=2pt}
+    ]
+    \node[step] (s1) {\faDownload\\[3pt]1. Cargar\\datos limpios};
+    \node[step, right=of s1] (s2) {\faBullseye\\[3pt]2. Definir\\X e y};
+    \node[step, right=of s2] (s3) {\faCode\\[3pt]3. One-Hot\\Encoding};
+    \node[step, right=of s3] (s4) {\faRulerCombined\\[3pt]4. Escalar\\valores};
+    \node[step, right=of s4] (s5) {\faCut\\[3pt]5. Dividir\\train / test};
+    \node[step, right=of s5] (s6) {\faSave\\[3pt]6. Exportar\\4 CSV};
+
+    \draw[arr] (s1) -- (s2);
+    \draw[arr] (s2) -- (s3);
+    \draw[arr] (s3) -- (s4);
+    \draw[arr] (s4) -- (s5);
+    \draw[arr] (s5) -- (s6);
+  \end{tikzpicture}
+
+  \vspace{0.3cm}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{conceptbox}{\faPython\enspace Herramientas}
+        \small
+        \begin{itemize}\setlength\itemsep{3pt}
+          \item \tech{pandas}, \tech{numpy}, \tech{matplotlib}
+          \item \tech{scikit-learn} \textbf{(nuevo)}
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{conceptbox}{\faKey\enspace Conceptos clave}
+        \small
+        \begin{itemize}\setlength\itemsep{2pt}
+          \item Características (X) y objetivo (y)
+          \item One-Hot Encoding
+          \item Escalado de valores
+          \item Train / Test Split
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.2cm}
+  \begin{alertblock}{\faArrowRight\enspace Próxima unidad}
+    \centering\small
+    Con estos archivos preparados podremos ver cómo \textbf{los modelos de Machine Learning aprenden} de los datos.
+  \end{alertblock}
+
+  \vspace{0.2cm}
+  \centering
+  \large\textcolor{mainColor}{\faArrowRight}\enspace
+  \textbf{\normalsize ¡Abran Google Colab!}
+\end{frame}
+
+\end{document}
